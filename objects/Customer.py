@@ -1,6 +1,7 @@
 import grpc
 import time
 
+
 class Customer:
     def __init__(self, id, events):
         # unique ID of the Customer
@@ -12,10 +13,10 @@ class Customer:
         # pointer for the stub
         self.stub = None
 
-    # TODO: students are expected to create the Customer stub
+    # This function communicate with the Branch by the specified branch ID
     def createStub(self):
         pass
 
-    # TODO: students are expected to send out the events to the Bank
+    # process events from the list and submit the requests to branch process
     def executeEvents(self):
         pass

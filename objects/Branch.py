@@ -15,10 +15,9 @@ class Branch():
         # a list of received messages used for debugging purpose
         self.recvMsg = list()
         # iterate the processID of the branches
-
-        # TODO: students are expected to store the processID of the branches
+        self.eventId = list()
         pass
 
-    # TODO: students are expected to process requests from both Client and Branch
+    # This function receives request from customer and branch processes and return results from the requested process
     def MsgDelivery(self, request, context):
         pass
