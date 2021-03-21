@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x18protos/bank_system.proto\"3\n\x06\x42ranch\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x0f\n\x07\x62\x61lance\x18\x03 \x01(\x05\"4\n\x08\x43ustomer\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x0e\n\x06\x65vents\x18\x03 \x03(\t2V\n\nBankSystem\x12&\n\x0cprocessEvent\x12\t.Customer\x1a\t.Customer\"\x00\x12 \n\nsyncBranch\x12\x07.Branch\x1a\x07.Branch\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x18protos/bank_system.proto\"3\n\x06\x42ranch\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x0f\n\x07\x62\x61lance\x18\x03 \x01(\x05\"4\n\x08\x43ustomer\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x0e\n\x06\x65vents\x18\x03 \x03(\t2~\n\nBankSystem\x12$\n\ncreateStub\x12\t.Customer\x1a\t.Customer\"\x00\x12\'\n\rexecuteEvents\x12\t.Customer\x1a\t.Customer\"\x00\x12!\n\x0bMsgDelivery\x12\x07.Branch\x1a\x07.Branch\"\x00\x62\x06proto3'
 )
 
 
@@ -144,11 +144,11 @@ _BANKSYSTEM = _descriptor.ServiceDescriptor(
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
   serialized_start=135,
-  serialized_end=221,
+  serialized_end=261,
   methods=[
   _descriptor.MethodDescriptor(
-    name='processEvent',
-    full_name='BankSystem.processEvent',
+    name='createStub',
+    full_name='BankSystem.createStub',
     index=0,
     containing_service=None,
     input_type=_CUSTOMER,
@@ -157,9 +157,19 @@ _BANKSYSTEM = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
-    name='syncBranch',
-    full_name='BankSystem.syncBranch',
+    name='executeEvents',
+    full_name='BankSystem.executeEvents',
     index=1,
+    containing_service=None,
+    input_type=_CUSTOMER,
+    output_type=_CUSTOMER,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='MsgDelivery',
+    full_name='BankSystem.MsgDelivery',
+    index=2,
     containing_service=None,
     input_type=_BRANCH,
     output_type=_BRANCH,

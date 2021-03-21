@@ -14,13 +14,18 @@ class BankSystemStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.processEvent = channel.unary_unary(
-                '/BankSystem/processEvent',
+        self.createStub = channel.unary_unary(
+                '/BankSystem/createStub',
                 request_serializer=protos_dot_bank__system__pb2.Customer.SerializeToString,
                 response_deserializer=protos_dot_bank__system__pb2.Customer.FromString,
                 )
-        self.syncBranch = channel.unary_unary(
-                '/BankSystem/syncBranch',
+        self.executeEvents = channel.unary_unary(
+                '/BankSystem/executeEvents',
+                request_serializer=protos_dot_bank__system__pb2.Customer.SerializeToString,
+                response_deserializer=protos_dot_bank__system__pb2.Customer.FromString,
+                )
+        self.MsgDelivery = channel.unary_unary(
+                '/BankSystem/MsgDelivery',
                 request_serializer=protos_dot_bank__system__pb2.Branch.SerializeToString,
                 response_deserializer=protos_dot_bank__system__pb2.Branch.FromString,
                 )
@@ -29,13 +34,19 @@ class BankSystemStub(object):
 class BankSystemServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def processEvent(self, request, context):
+    def createStub(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def syncBranch(self, request, context):
+    def executeEvents(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MsgDelivery(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -44,13 +55,18 @@ class BankSystemServicer(object):
 
 def add_BankSystemServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'processEvent': grpc.unary_unary_rpc_method_handler(
-                    servicer.processEvent,
+            'createStub': grpc.unary_unary_rpc_method_handler(
+                    servicer.createStub,
                     request_deserializer=protos_dot_bank__system__pb2.Customer.FromString,
                     response_serializer=protos_dot_bank__system__pb2.Customer.SerializeToString,
             ),
-            'syncBranch': grpc.unary_unary_rpc_method_handler(
-                    servicer.syncBranch,
+            'executeEvents': grpc.unary_unary_rpc_method_handler(
+                    servicer.executeEvents,
+                    request_deserializer=protos_dot_bank__system__pb2.Customer.FromString,
+                    response_serializer=protos_dot_bank__system__pb2.Customer.SerializeToString,
+            ),
+            'MsgDelivery': grpc.unary_unary_rpc_method_handler(
+                    servicer.MsgDelivery,
                     request_deserializer=protos_dot_bank__system__pb2.Branch.FromString,
                     response_serializer=protos_dot_bank__system__pb2.Branch.SerializeToString,
             ),
@@ -65,7 +81,7 @@ class BankSystem(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def processEvent(request,
+    def createStub(request,
             target,
             options=(),
             channel_credentials=None,
@@ -75,14 +91,14 @@ class BankSystem(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/BankSystem/processEvent',
+        return grpc.experimental.unary_unary(request, target, '/BankSystem/createStub',
             protos_dot_bank__system__pb2.Customer.SerializeToString,
             protos_dot_bank__system__pb2.Customer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def syncBranch(request,
+    def executeEvents(request,
             target,
             options=(),
             channel_credentials=None,
@@ -92,7 +108,24 @@ class BankSystem(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/BankSystem/syncBranch',
+        return grpc.experimental.unary_unary(request, target, '/BankSystem/executeEvents',
+            protos_dot_bank__system__pb2.Customer.SerializeToString,
+            protos_dot_bank__system__pb2.Customer.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def MsgDelivery(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/BankSystem/MsgDelivery',
             protos_dot_bank__system__pb2.Branch.SerializeToString,
             protos_dot_bank__system__pb2.Branch.FromString,
             options, channel_credentials,

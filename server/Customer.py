@@ -1,8 +1,10 @@
 import grpc
 import time
+import protos.bank_system_pb2
+import protos.bank_system_pb2_grpc
 
 
-class Customer:
+class Customer(protos.bank_system_pb2_grpc.BankSystemServicer):
     def __init__(self, id, events):
         # unique ID of the Customer
         self.id = id

@@ -1,7 +1,9 @@
 import grpc
+import protos.bank_system_pb2
+import protos.bank_system_pb2_grpc
 
 
-class Branch():
+class Branch(protos.bank_system_pb2_grpc.BankSystemServicer):
 
     def __init__(self, id, balance, branches):
         # unique ID of the Branch

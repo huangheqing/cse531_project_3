@@ -9,12 +9,15 @@ import protos.bank_system_pb2_grpc
 
 
 class Server(protos.bank_system_pb2_grpc.BankSystemServicer):
-
-    def processEvent(self, request, context):
+    def createStub(self, request, context):
         print(request)
         return request
 
-    def syncBranch(self, request, context):
+    def executeEvents(self, request, context):
+        print(request)
+        return request
+
+    def MsgDelivery(self, request, context):
         print(request)
         return request
 
@@ -51,8 +54,8 @@ if __name__ == '__main__':
         branch = protos.bank_system_pb2.Branch(id=1, type="", balance=200)
 
         # make the call
-        processEvent = stub.processEvent(customer)
-        syncBranch = stub.syncBranch(branch)
+        processEvent = stub.createStub(customer)
+        syncBranch = stub.executeEvents(branch)
 
         # print(processEvent)
         # print(syncBranch)

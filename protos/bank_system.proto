@@ -13,6 +13,7 @@ message Customer {
 }
 
 service BankSystem {
-    rpc processEvent(Customer) returns (Customer) {}
-    rpc syncBranch(Branch) returns (Branch) {}
+    rpc createStub(Customer) returns (Customer) {}
+    rpc executeEvents(Customer) returns (Customer) {}
+    rpc MsgDelivery(Branch) returns (Branch) {}
 }
