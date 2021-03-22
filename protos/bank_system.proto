@@ -6,14 +6,6 @@ message Branch {
     int32 balance = 3;
 }
 
-message Customer {
-    int32 id = 1;
-    string type = 2;
-    repeated string events = 3;
-}
-
-service BankSystem {
-    rpc createStub(Customer) returns (Customer) {}
-    rpc executeEvents(Customer) returns (Customer) {}
+service BranchService {
     rpc MsgDelivery(Branch) returns (Branch) {}
 }

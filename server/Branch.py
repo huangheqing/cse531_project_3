@@ -3,7 +3,7 @@ import protos.bank_system_pb2
 import protos.bank_system_pb2_grpc
 
 
-class Branch(protos.bank_system_pb2_grpc.BankSystemServicer):
+class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
 
     def __init__(self, id, balance, branches):
         # unique ID of the Branch
@@ -22,4 +22,4 @@ class Branch(protos.bank_system_pb2_grpc.BankSystemServicer):
 
     # This function receives request from customer and branch processes and return results from the requested process
     def MsgDelivery(self, request, context):
-        pass
+        return request

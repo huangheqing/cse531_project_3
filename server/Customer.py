@@ -4,8 +4,8 @@ import protos.bank_system_pb2
 import protos.bank_system_pb2_grpc
 
 
-class Customer(protos.bank_system_pb2_grpc.BankSystemServicer):
-    def __init__(self, id, events):
+class Customer():
+    def __init__(self, id, events, stub):
         # unique ID of the Customer
         self.id = id
         # events from the input
@@ -13,7 +13,7 @@ class Customer(protos.bank_system_pb2_grpc.BankSystemServicer):
         # a list of received messages used for debugging purpose
         self.recvMsg = list()
         # pointer for the stub
-        self.stub = None
+        self.stub = stub
 
     # This function communicate with the Branch by the specified branch ID
     def createStub(self):

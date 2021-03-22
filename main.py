@@ -3,24 +3,12 @@ from concurrent import futures
 import json
 import sys
 
-# import the generated classes
 import protos.bank_system_pb2
 import protos.bank_system_pb2_grpc
 
-
-class Server(protos.bank_system_pb2_grpc.BankSystemServicer):
-    def createStub(self, request, context):
-        print(request)
-        return request
-
-    def executeEvents(self, request, context):
-        print(request)
-        return request
-
-    def MsgDelivery(self, request, context):
-        print(request)
-        return request
-
+from constant.Operations import WITHDRAW, QUERY, DEPOSIT
+from server.Branch import Branch
+from server.Customer import Customer
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -32,30 +20,30 @@ if __name__ == '__main__':
         except "Not able to process file":
             print(f'not able to load the json file: {filename}')
 
+        balance = input_data[0]['events'][0]['money']
+        print(f'initial balance is {balance}')
         if len(input_data) > 1:
             for data in input_data:
-                print(data)
-
-        # open a gRPC channel
-        channel = grpc.insecure_channel('localhost:8081')
-
-        # create a stub (client)
-        stub = protos.bank_system_pb2_grpc.BankSystemStub(channel)
-
-        # Generate x amount of services based on the input files branches/custoemrs
-        server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-        protos.bank_system_pb2_grpc.add_BankSystemServicer_to_server(Server(), server)
-        print('Starting server. Listening on port 8081.')
-        server.add_insecure_port('localhost:8081')
-        server.start()
-
-        # create a valid request message
-        customer = protos.bank_system_pb2.Customer(id=1, type="", events=[""])
-        branch = protos.bank_system_pb2.Branch(id=1, type="", balance=200)
-
-        # make the call
-        processEvent = stub.createStub(customer)
-        syncBranch = stub.executeEvents(branch)
-
-        # print(processEvent)
-        # print(syncBranch)
+                if data['type'] == 'customer':
+                    i = data['id']
+                    for event in data['events']:
+                        if event['interface'] == QUERY:
+                            balance = balance
+                        elif event['interface'] == DEPOSIT:
+                            balance = balance + event['money']
+                        elif event['interface'] == WITHDRAW:
+                            balance = balance - event['money']
+                        else:
+                            balance = balance
+                    # We grab all customers process and based on the customer id
+                    # create client services and branch services
+                    branch = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+                    protos.bank_system_pb2_grpc.add_BranchServiceServicer_to_server(Branch(i, 400, []), branch)
+                    print(f'Starting backend server. Listening on port 808{i}')
+                    branch.add_insecure_port(f'localhost:808{i}')
+                    branch.start()
+                    # create a stub (client)
+                    channel = grpc.insecure_channel(f'localhost:808{i}')
+                    stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
+                    Customer(i, data['events'], stub)
+        print(f'final balance is {balance}')
