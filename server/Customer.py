@@ -1,11 +1,10 @@
 import grpc
-import time
 import protos.bank_system_pb2
 import protos.bank_system_pb2_grpc
 
 
 class Customer():
-    def __init__(self, id, events, stub):
+    def __init__(self, id, events):
         # unique ID of the Customer
         self.id = id
         # events from the input
@@ -13,12 +12,17 @@ class Customer():
         # a list of received messages used for debugging purpose
         self.recvMsg = list()
         # pointer for the stub
-        self.stub = stub
+        self.stub = None
 
     # This function communicate with the Branch by the specified branch ID
     def createStub(self):
-        pass
+        port = 8080 + self.id
+        channel = grpc.insecure_channel(f'localhost:{port}')
+        self.stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
 
     # process events from the list and submit the requests to branch process
     def executeEvents(self):
-        pass
+        for event in self.events:
+            print(event)
+            self.stub.MsgDelivery(
+                protos.bank_system_pb2.Event(id=event['id'], interface=event['interface'], money=event['money']))

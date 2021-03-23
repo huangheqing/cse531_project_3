@@ -16,8 +16,8 @@ class BranchServiceStub(object):
         """
         self.MsgDelivery = channel.unary_unary(
                 '/BranchService/MsgDelivery',
-                request_serializer=protos_dot_bank__system__pb2.Branch.SerializeToString,
-                response_deserializer=protos_dot_bank__system__pb2.Branch.FromString,
+                request_serializer=protos_dot_bank__system__pb2.Event.SerializeToString,
+                response_deserializer=protos_dot_bank__system__pb2.Event.FromString,
                 )
 
 
@@ -35,8 +35,8 @@ def add_BranchServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'MsgDelivery': grpc.unary_unary_rpc_method_handler(
                     servicer.MsgDelivery,
-                    request_deserializer=protos_dot_bank__system__pb2.Branch.FromString,
-                    response_serializer=protos_dot_bank__system__pb2.Branch.SerializeToString,
+                    request_deserializer=protos_dot_bank__system__pb2.Event.FromString,
+                    response_serializer=protos_dot_bank__system__pb2.Event.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -60,7 +60,7 @@ class BranchService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/BranchService/MsgDelivery',
-            protos_dot_bank__system__pb2.Branch.SerializeToString,
-            protos_dot_bank__system__pb2.Branch.FromString,
+            protos_dot_bank__system__pb2.Event.SerializeToString,
+            protos_dot_bank__system__pb2.Event.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

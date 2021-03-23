@@ -19,36 +19,36 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x18protos/bank_system.proto\"3\n\x06\x42ranch\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x0f\n\x07\x62\x61lance\x18\x03 \x01(\x05\x32\x32\n\rBranchService\x12!\n\x0bMsgDelivery\x12\x07.Branch\x1a\x07.Branch\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x18protos/bank_system.proto\"5\n\x05\x45vent\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\r\n\x05money\x18\x03 \x01(\x05\x32\x30\n\rBranchService\x12\x1f\n\x0bMsgDelivery\x12\x06.Event\x1a\x06.Event\"\x00\x62\x06proto3'
 )
 
 
 
 
-_BRANCH = _descriptor.Descriptor(
-  name='Branch',
-  full_name='Branch',
+_EVENT = _descriptor.Descriptor(
+  name='Event',
+  full_name='Event',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='Branch.id', index=0,
+      name='id', full_name='Event.id', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='type', full_name='Branch.type', index=1,
+      name='interface', full_name='Event.interface', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='balance', full_name='Branch.balance', index=2,
+      name='money', full_name='Event.money', index=2,
       number=3, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -67,18 +67,18 @@ _BRANCH = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=28,
-  serialized_end=79,
+  serialized_end=81,
 )
 
-DESCRIPTOR.message_types_by_name['Branch'] = _BRANCH
+DESCRIPTOR.message_types_by_name['Event'] = _EVENT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-Branch = _reflection.GeneratedProtocolMessageType('Branch', (_message.Message,), {
-  'DESCRIPTOR' : _BRANCH,
+Event = _reflection.GeneratedProtocolMessageType('Event', (_message.Message,), {
+  'DESCRIPTOR' : _EVENT,
   '__module__' : 'protos.bank_system_pb2'
-  # @@protoc_insertion_point(class_scope:Branch)
+  # @@protoc_insertion_point(class_scope:Event)
   })
-_sym_db.RegisterMessage(Branch)
+_sym_db.RegisterMessage(Event)
 
 
 
@@ -89,7 +89,7 @@ _BRANCHSERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=81,
+  serialized_start=83,
   serialized_end=131,
   methods=[
   _descriptor.MethodDescriptor(
@@ -97,8 +97,8 @@ _BRANCHSERVICE = _descriptor.ServiceDescriptor(
     full_name='BranchService.MsgDelivery',
     index=0,
     containing_service=None,
-    input_type=_BRANCH,
-    output_type=_BRANCH,
+    input_type=_EVENT,
+    output_type=_EVENT,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

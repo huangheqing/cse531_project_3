@@ -22,4 +22,5 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
 
     # This function receives request from customer and branch processes and return results from the requested process
     def MsgDelivery(self, request, context):
+        print(f'processing{request}')
         return request

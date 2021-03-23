@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-message Branch {
+message Event {
     int32 id = 1;
-    string type = 2;
-    int32 balance = 3;
+    string interface = 2;
+    int32 money = 3;
 }
 
 service BranchService {
-    rpc MsgDelivery(Branch) returns (Branch) {}
+    rpc MsgDelivery(Event) returns (Event) {}
 }
