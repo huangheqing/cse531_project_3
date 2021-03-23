@@ -19,10 +19,49 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x18protos/bank_system.proto\"5\n\x05\x45vent\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\r\n\x05money\x18\x03 \x01(\x05\x32\x30\n\rBranchService\x12\x1f\n\x0bMsgDelivery\x12\x06.Event\x1a\x06.Event\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x18protos/bank_system.proto\":\n\x06\x45vents\x12\x16\n\x06\x65vents\x18\x01 \x03(\x0b\x32\x06.Event\x12\x18\n\x10number_of_fellow\x18\x02 \x01(\x05\"5\n\x05\x45vent\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\r\n\x05money\x18\x03 \x01(\x05\x32T\n\rBranchService\x12!\n\x0bMsgDelivery\x12\x07.Events\x1a\x07.Events\"\x00\x12 \n\nSyncBranch\x12\x07.Events\x1a\x07.Events\"\x00\x62\x06proto3'
 )
 
 
+
+
+_EVENTS = _descriptor.Descriptor(
+  name='Events',
+  full_name='Events',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='events', full_name='Events.events', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='number_of_fellow', full_name='Events.number_of_fellow', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=28,
+  serialized_end=86,
+)
 
 
 _EVENT = _descriptor.Descriptor(
@@ -66,12 +105,21 @@ _EVENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=28,
-  serialized_end=81,
+  serialized_start=88,
+  serialized_end=141,
 )
 
+_EVENTS.fields_by_name['events'].message_type = _EVENT
+DESCRIPTOR.message_types_by_name['Events'] = _EVENTS
 DESCRIPTOR.message_types_by_name['Event'] = _EVENT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+Events = _reflection.GeneratedProtocolMessageType('Events', (_message.Message,), {
+  'DESCRIPTOR' : _EVENTS,
+  '__module__' : 'protos.bank_system_pb2'
+  # @@protoc_insertion_point(class_scope:Events)
+  })
+_sym_db.RegisterMessage(Events)
 
 Event = _reflection.GeneratedProtocolMessageType('Event', (_message.Message,), {
   'DESCRIPTOR' : _EVENT,
@@ -89,16 +137,26 @@ _BRANCHSERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=83,
-  serialized_end=131,
+  serialized_start=143,
+  serialized_end=227,
   methods=[
   _descriptor.MethodDescriptor(
     name='MsgDelivery',
     full_name='BranchService.MsgDelivery',
     index=0,
     containing_service=None,
-    input_type=_EVENT,
-    output_type=_EVENT,
+    input_type=_EVENTS,
+    output_type=_EVENTS,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='SyncBranch',
+    full_name='BranchService.SyncBranch',
+    index=1,
+    containing_service=None,
+    input_type=_EVENTS,
+    output_type=_EVENTS,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

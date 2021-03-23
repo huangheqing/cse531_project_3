@@ -16,8 +16,13 @@ class BranchServiceStub(object):
         """
         self.MsgDelivery = channel.unary_unary(
                 '/BranchService/MsgDelivery',
-                request_serializer=protos_dot_bank__system__pb2.Event.SerializeToString,
-                response_deserializer=protos_dot_bank__system__pb2.Event.FromString,
+                request_serializer=protos_dot_bank__system__pb2.Events.SerializeToString,
+                response_deserializer=protos_dot_bank__system__pb2.Events.FromString,
+                )
+        self.SyncBranch = channel.unary_unary(
+                '/BranchService/SyncBranch',
+                request_serializer=protos_dot_bank__system__pb2.Events.SerializeToString,
+                response_deserializer=protos_dot_bank__system__pb2.Events.FromString,
                 )
 
 
@@ -30,13 +35,24 @@ class BranchServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def SyncBranch(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_BranchServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'MsgDelivery': grpc.unary_unary_rpc_method_handler(
                     servicer.MsgDelivery,
-                    request_deserializer=protos_dot_bank__system__pb2.Event.FromString,
-                    response_serializer=protos_dot_bank__system__pb2.Event.SerializeToString,
+                    request_deserializer=protos_dot_bank__system__pb2.Events.FromString,
+                    response_serializer=protos_dot_bank__system__pb2.Events.SerializeToString,
+            ),
+            'SyncBranch': grpc.unary_unary_rpc_method_handler(
+                    servicer.SyncBranch,
+                    request_deserializer=protos_dot_bank__system__pb2.Events.FromString,
+                    response_serializer=protos_dot_bank__system__pb2.Events.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -60,7 +76,24 @@ class BranchService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/BranchService/MsgDelivery',
-            protos_dot_bank__system__pb2.Event.SerializeToString,
-            protos_dot_bank__system__pb2.Event.FromString,
+            protos_dot_bank__system__pb2.Events.SerializeToString,
+            protos_dot_bank__system__pb2.Events.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SyncBranch(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/BranchService/SyncBranch',
+            protos_dot_bank__system__pb2.Events.SerializeToString,
+            protos_dot_bank__system__pb2.Events.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

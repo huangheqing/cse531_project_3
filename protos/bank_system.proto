@@ -1,11 +1,17 @@
 syntax = "proto3";
 
+message Events {
+    repeated Event events = 1;
+    int32 number_of_fellow = 2;
+}
+
 message Event {
-    int32 id = 1;
-    string interface = 2;
-    int32 money = 3;
+  int32 id = 1;
+  string interface = 2;
+  int32 money = 3;
 }
 
 service BranchService {
-    rpc MsgDelivery(Event) returns (Event) {}
+    rpc MsgDelivery(Events) returns (Events) {}
+    rpc SyncBranch(Events) returns (Events) {}
 }

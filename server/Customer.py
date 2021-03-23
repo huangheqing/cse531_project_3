@@ -4,13 +4,15 @@ import protos.bank_system_pb2_grpc
 
 
 class Customer():
-    def __init__(self, id, events):
+    def __init__(self, id, events, number_of_fellow):
         # unique ID of the Customer
         self.id = id
         # events from the input
         self.events = events
         # a list of received messages used for debugging purpose
         self.recvMsg = list()
+        # number of branches opened
+        self.num_of_fellow = number_of_fellow
         # pointer for the stub
         self.stub = None
 
@@ -22,7 +24,5 @@ class Customer():
 
     # process events from the list and submit the requests to branch process
     def executeEvents(self):
-        for event in self.events:
-            print(event)
-            self.stub.MsgDelivery(
-                protos.bank_system_pb2.Event(id=event['id'], interface=event['interface'], money=event['money']))
+        self.stub.MsgDelivery(
+            protos.bank_system_pb2.Events(events=self.events, number_of_fellow=self.num_of_fellow))
