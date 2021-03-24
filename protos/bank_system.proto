@@ -11,8 +11,20 @@ message Event {
   int32 money = 3;
 }
 
+message Output {
+  int32 id = 1;
+  repeated Recv recv = 2;
+}
+
+message Recv {
+  string interface = 1;
+  string result = 2;
+  int32 money = 3;
+}
+
 service BranchService {
     rpc MsgDelivery(Events) returns (Events) {}
     rpc SyncBranch(Events) returns (Events) {}
     rpc getFinalBalance(Event) returns (Event) {}
+    rpc getOutput(Output) returns (Output) {}
 }

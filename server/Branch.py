@@ -31,6 +31,8 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
             money = event.money
             self.operate_money(interface, money)
             print(f'branch {self.id} {interface} {money}, result in {self.balance}')
+            if interface != 'query':
+                self.recvMsg.append(protos.bank_system_pb2.Recv(interface=interface, result='success'))
         for i in range(1, num_branch + 1):
             if i != int(self.id):
                 port = 8080 + i
@@ -50,7 +52,11 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
         return request
 
     def getFinalBalance(self, request, context):
+        self.recvMsg.append(protos.bank_system_pb2.Recv(interface='query', result='success', money=self.balance))
         return protos.bank_system_pb2.Event(id=self.id, interface='query', money=self.balance)
+
+    def getOutput(self, request, context):
+        return protos.bank_system_pb2.Output(id=self.id, recv=self.recvMsg)
 
     def operate_money(self, interface, money):
         if interface == QUERY:

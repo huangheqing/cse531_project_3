@@ -16,7 +16,6 @@ if __name__ == '__main__':
         except "Not able to process file":
             print(f'not able to load the json file: {filename}')
 
-        balance = input_data[0]['events'][0]['money']
         initial_balance = input_data[0]['events'][0]['money']
         print(f'initial balance is {initial_balance}')
         customer_requests = {}
@@ -28,8 +27,6 @@ if __name__ == '__main__':
                     events = data['events']
                     # We grab all customers process and based on the customer id
                     # create branch services
-                    # p = Process(target=backend_service(i, initial_balance))
-                    # processes.append(p)
                     run_backend(i, initial_balance, processes)
                     customer_requests[i] = events
 
@@ -41,6 +38,8 @@ if __name__ == '__main__':
 
         # This is just for sake of simplicity to make sure all processes are finished
         time.sleep(3)
+
+        # Get results from the branch services
         for cus_id in customer_requests.keys():
             # get final balance
             port = 8080 + cus_id
@@ -48,4 +47,11 @@ if __name__ == '__main__':
             stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
             print(stub.getFinalBalance(protos.bank_system_pb2.Event(id=cus_id, interface='query')))
 
+        # Get results from the branch services
+        for cus_id in customer_requests.keys():
+            # get final balance
+            port = 8080 + cus_id
+            channel = grpc.insecure_channel(f'localhost:{port}')
+            stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
+            print(stub.getOutput(protos.bank_system_pb2.Output()))
         print('end of client')

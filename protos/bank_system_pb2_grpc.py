@@ -29,6 +29,11 @@ class BranchServiceStub(object):
                 request_serializer=protos_dot_bank__system__pb2.Event.SerializeToString,
                 response_deserializer=protos_dot_bank__system__pb2.Event.FromString,
                 )
+        self.getOutput = channel.unary_unary(
+                '/BranchService/getOutput',
+                request_serializer=protos_dot_bank__system__pb2.Output.SerializeToString,
+                response_deserializer=protos_dot_bank__system__pb2.Output.FromString,
+                )
 
 
 class BranchServiceServicer(object):
@@ -52,6 +57,12 @@ class BranchServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getOutput(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_BranchServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -69,6 +80,11 @@ def add_BranchServiceServicer_to_server(servicer, server):
                     servicer.getFinalBalance,
                     request_deserializer=protos_dot_bank__system__pb2.Event.FromString,
                     response_serializer=protos_dot_bank__system__pb2.Event.SerializeToString,
+            ),
+            'getOutput': grpc.unary_unary_rpc_method_handler(
+                    servicer.getOutput,
+                    request_deserializer=protos_dot_bank__system__pb2.Output.FromString,
+                    response_serializer=protos_dot_bank__system__pb2.Output.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -128,5 +144,22 @@ class BranchService(object):
         return grpc.experimental.unary_unary(request, target, '/BranchService/getFinalBalance',
             protos_dot_bank__system__pb2.Event.SerializeToString,
             protos_dot_bank__system__pb2.Event.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getOutput(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/BranchService/getOutput',
+            protos_dot_bank__system__pb2.Output.SerializeToString,
+            protos_dot_bank__system__pb2.Output.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
