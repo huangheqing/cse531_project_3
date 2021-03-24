@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x18protos/bank_system.proto\":\n\x06\x45vents\x12\x16\n\x06\x65vents\x18\x01 \x03(\x0b\x32\x06.Event\x12\x18\n\x10number_of_fellow\x18\x02 \x01(\x05\"5\n\x05\x45vent\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\r\n\x05money\x18\x03 \x01(\x05\x32T\n\rBranchService\x12!\n\x0bMsgDelivery\x12\x07.Events\x1a\x07.Events\"\x00\x12 \n\nSyncBranch\x12\x07.Events\x1a\x07.Events\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x18protos/bank_system.proto\":\n\x06\x45vents\x12\x16\n\x06\x65vents\x18\x01 \x03(\x0b\x32\x06.Event\x12\x18\n\x10number_of_fellow\x18\x02 \x01(\x05\"5\n\x05\x45vent\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\r\n\x05money\x18\x03 \x01(\x05\x32y\n\rBranchService\x12!\n\x0bMsgDelivery\x12\x07.Events\x1a\x07.Events\"\x00\x12 \n\nSyncBranch\x12\x07.Events\x1a\x07.Events\"\x00\x12#\n\x0fgetFinalBalance\x12\x06.Event\x1a\x06.Event\"\x00\x62\x06proto3'
 )
 
 
@@ -138,7 +138,7 @@ _BRANCHSERVICE = _descriptor.ServiceDescriptor(
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
   serialized_start=143,
-  serialized_end=227,
+  serialized_end=264,
   methods=[
   _descriptor.MethodDescriptor(
     name='MsgDelivery',
@@ -157,6 +157,16 @@ _BRANCHSERVICE = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_EVENTS,
     output_type=_EVENTS,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='getFinalBalance',
+    full_name='BranchService.getFinalBalance',
+    index=2,
+    containing_service=None,
+    input_type=_EVENT,
+    output_type=_EVENT,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

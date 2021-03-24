@@ -49,6 +49,9 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
             print(f'syncing branch {self.id} {interface} {money}, result in {self.balance}')
         return request
 
+    def getFinalBalance(self, request, context):
+        return protos.bank_system_pb2.Event(id=self.id, interface='query', money=self.balance)
+
     def operate_money(self, interface, money):
         if interface == QUERY:
             self.balance = self.balance

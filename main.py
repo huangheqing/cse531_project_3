@@ -1,21 +1,11 @@
 import grpc
-from concurrent import futures
 import json
 import sys
 import protos.bank_system_pb2
 import protos.bank_system_pb2_grpc
+import time
 
-from constant.Operations import WITHDRAW, QUERY, DEPOSIT
-from server.Branch import Branch
-from server.Customer import Customer
-
-
-def client_request(id):
-    customer = Customer(id, customer_requests[id], len(customer_requests))
-    print(f'requesting branch {id}')
-    customer.createStub()
-    customer.executeEvents()
-
+from utils.requests_handler import run_backend, client_request
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[0] == 'main.py':
@@ -30,6 +20,7 @@ if __name__ == '__main__':
         initial_balance = input_data[0]['events'][0]['money']
         print(f'initial balance is {initial_balance}')
         customer_requests = {}
+        processes = []
         if len(input_data) > 1:
             for data in input_data:
                 if data['type'] == 'customer':
@@ -37,11 +28,24 @@ if __name__ == '__main__':
                     events = data['events']
                     # We grab all customers process and based on the customer id
                     # create branch services
+                    # p = Process(target=backend_service(i, initial_balance))
+                    # processes.append(p)
+                    run_backend(i, initial_balance, processes)
                     customer_requests[i] = events
 
-        print(f'final balance is {balance}')
         for cus_id in customer_requests.keys():
             # make request from the client to backend
             # We passed the number of fellow branches to the Customer class so the branches can update the
             # fellow server accordingly
-            client_request(cus_id)
+            client_request(cus_id, customer_requests[cus_id], len(customer_requests))
+
+        # This is just for sake of simplicity to make sure all processes are finished
+        time.sleep(3)
+        for cus_id in customer_requests.keys():
+            # get final balance
+            port = 8080 + cus_id
+            channel = grpc.insecure_channel(f'localhost:{port}')
+            stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
+            print(stub.getFinalBalance(protos.bank_system_pb2.Event(id=cus_id, interface='query')))
+
+        print('end of client')

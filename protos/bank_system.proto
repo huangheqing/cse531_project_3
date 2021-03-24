@@ -14,4 +14,5 @@ message Event {
 service BranchService {
     rpc MsgDelivery(Events) returns (Events) {}
     rpc SyncBranch(Events) returns (Events) {}
+    rpc getFinalBalance(Event) returns (Event) {}
 }
