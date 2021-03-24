@@ -6,6 +6,7 @@ import protos.bank_system_pb2_grpc
 import time
 
 from utils.requests_handler import run_backend, client_request
+from utils.constant import PORT
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[0] == 'main.py':
@@ -42,7 +43,7 @@ if __name__ == '__main__':
         # Get results from the branch services
         for cus_id in customer_requests.keys():
             # get final balance
-            port = 8080 + cus_id
+            port = PORT + cus_id
             channel = grpc.insecure_channel(f'localhost:{port}')
             stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
             print(stub.getFinalBalance(protos.bank_system_pb2.Event(id=cus_id, interface='query')))
@@ -50,7 +51,7 @@ if __name__ == '__main__':
         # Get results from the branch services
         for cus_id in customer_requests.keys():
             # get final balance
-            port = 8080 + cus_id
+            port = PORT + cus_id
             channel = grpc.insecure_channel(f'localhost:{port}')
             stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
             print(stub.getOutput(protos.bank_system_pb2.Output()))

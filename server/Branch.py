@@ -3,6 +3,7 @@ import protos.bank_system_pb2
 import protos.bank_system_pb2_grpc
 
 from constant.Operations import QUERY, DEPOSIT, WITHDRAW
+from utils.constant import PORT
 
 
 class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
@@ -35,7 +36,7 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
                 self.recvMsg.append(protos.bank_system_pb2.Recv(interface=interface, result='success'))
         for i in range(1, num_branch + 1):
             if i != int(self.id):
-                port = 8080 + i
+                port = PORT + i
                 channel = grpc.insecure_channel(f'localhost:{port}')
                 stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
                 stub.SyncBranch(
