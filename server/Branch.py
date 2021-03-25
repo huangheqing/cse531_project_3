@@ -39,20 +39,41 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
                 port = PORT + i
                 channel = grpc.insecure_channel(f'localhost:{port}')
                 stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
-                stub.SyncBranch(
-                    protos.bank_system_pb2.Events(events=request.events, number_of_fellow=num_branch))
+                # put the events into 2 buckets and then send to other fellow branches
+                deposits = []
+                withdraws = []
+                for event in request.events:
+                    if event.interface == DEPOSIT:
+                        deposits.append(event)
+                    elif event.interface == WITHDRAW:
+                        withdraws.append(event)
+                stub.Propogate_Deposit(
+                    protos.bank_system_pb2.Events(events=deposits, number_of_fellow=num_branch))
+                stub.Propogate_Withdraw(
+                    protos.bank_system_pb2.Events(events=withdraws, number_of_fellow=num_branch))
         return request
 
     # This function receives request from branch processes and sync the current Branch by performing
     # events from incoming branch id
     # i.e. branch 1 send SyncBranch request to branch 2, branch 2 will execute all events in branch 1
-    def SyncBranch(self, request, context):
+    # if events are deposit call Propogate_Deposit otherwise call Propogate_Withdraw
+    def Propogate_Deposit(self, request, context):
+        result = 'success'
         for event in request.events:
             interface = event.interface
             money = event.money
-            self.operate_money(interface, money)
+            result = self.operate_money(interface, money)
             print(f'syncing branch {self.id} {interface} {money}, result in {self.balance}')
-        return request
+        return protos.bank_system_pb2.Recv(result=result)
+
+    def Propogate_Withdraw(self, request, context):
+        result = 'success'
+        for event in request.events:
+            interface = event.interface
+            money = event.money
+            result = self.operate_money(interface, money)
+            print(f'syncing branch {self.id} {interface} {money}, result in {self.balance}')
+        return protos.bank_system_pb2.Recv(result=result)
 
     # This grpc end point is for getting the final balance
     def getFinalBalance(self, request, context):
@@ -64,11 +85,17 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
         return protos.bank_system_pb2.Output(id=self.id, recv=self.recvMsg)
 
     def operate_money(self, interface, money):
+        tmp_balance = self.balance
         if interface == QUERY:
             self.balance = self.balance
         elif interface == DEPOSIT:
-            self.balance = self.balance + money
+            tmp_balance = tmp_balance + money
         elif interface == WITHDRAW:
-            self.balance = self.balance - money
+            tmp_balance = tmp_balance - money
         else:
             self.balance = self.balance
+        if tmp_balance < 0:
+            return 'failure'
+        else:
+            self.balance = tmp_balance
+            return 'success'

@@ -19,10 +19,15 @@ class BranchServiceStub(object):
                 request_serializer=protos_dot_bank__system__pb2.Events.SerializeToString,
                 response_deserializer=protos_dot_bank__system__pb2.Events.FromString,
                 )
-        self.SyncBranch = channel.unary_unary(
-                '/BranchService/SyncBranch',
+        self.Propogate_Deposit = channel.unary_unary(
+                '/BranchService/Propogate_Deposit',
                 request_serializer=protos_dot_bank__system__pb2.Events.SerializeToString,
-                response_deserializer=protos_dot_bank__system__pb2.Events.FromString,
+                response_deserializer=protos_dot_bank__system__pb2.Recv.FromString,
+                )
+        self.Propogate_Withdraw = channel.unary_unary(
+                '/BranchService/Propogate_Withdraw',
+                request_serializer=protos_dot_bank__system__pb2.Events.SerializeToString,
+                response_deserializer=protos_dot_bank__system__pb2.Recv.FromString,
                 )
         self.getFinalBalance = channel.unary_unary(
                 '/BranchService/getFinalBalance',
@@ -45,7 +50,13 @@ class BranchServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def SyncBranch(self, request, context):
+    def Propogate_Deposit(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Propogate_Withdraw(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -71,10 +82,15 @@ def add_BranchServiceServicer_to_server(servicer, server):
                     request_deserializer=protos_dot_bank__system__pb2.Events.FromString,
                     response_serializer=protos_dot_bank__system__pb2.Events.SerializeToString,
             ),
-            'SyncBranch': grpc.unary_unary_rpc_method_handler(
-                    servicer.SyncBranch,
+            'Propogate_Deposit': grpc.unary_unary_rpc_method_handler(
+                    servicer.Propogate_Deposit,
                     request_deserializer=protos_dot_bank__system__pb2.Events.FromString,
-                    response_serializer=protos_dot_bank__system__pb2.Events.SerializeToString,
+                    response_serializer=protos_dot_bank__system__pb2.Recv.SerializeToString,
+            ),
+            'Propogate_Withdraw': grpc.unary_unary_rpc_method_handler(
+                    servicer.Propogate_Withdraw,
+                    request_deserializer=protos_dot_bank__system__pb2.Events.FromString,
+                    response_serializer=protos_dot_bank__system__pb2.Recv.SerializeToString,
             ),
             'getFinalBalance': grpc.unary_unary_rpc_method_handler(
                     servicer.getFinalBalance,
@@ -114,7 +130,7 @@ class BranchService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def SyncBranch(request,
+    def Propogate_Deposit(request,
             target,
             options=(),
             channel_credentials=None,
@@ -124,9 +140,26 @@ class BranchService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/BranchService/SyncBranch',
+        return grpc.experimental.unary_unary(request, target, '/BranchService/Propogate_Deposit',
             protos_dot_bank__system__pb2.Events.SerializeToString,
-            protos_dot_bank__system__pb2.Events.FromString,
+            protos_dot_bank__system__pb2.Recv.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def Propogate_Withdraw(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/BranchService/Propogate_Withdraw',
+            protos_dot_bank__system__pb2.Events.SerializeToString,
+            protos_dot_bank__system__pb2.Recv.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
