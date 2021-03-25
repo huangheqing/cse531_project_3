@@ -2,7 +2,7 @@ import grpc
 import protos.bank_system_pb2
 import protos.bank_system_pb2_grpc
 
-from constant.Operations import QUERY, DEPOSIT, WITHDRAW
+from utils.Operations import QUERY, DEPOSIT, WITHDRAW
 from utils.constant import PORT
 
 
@@ -27,7 +27,6 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
     def MsgDelivery(self, request, context):
         num_branch = request.number_of_fellow
         for event in request.events:
-            event_id = event.id
             interface = event.interface
             money = event.money
             self.operate_money(interface, money)
@@ -52,10 +51,12 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
             print(f'syncing branch {self.id} {interface} {money}, result in {self.balance}')
         return request
 
+    # This grpc end point is for getting the final balance
     def getFinalBalance(self, request, context):
         self.recvMsg.append(protos.bank_system_pb2.Recv(interface='query', result='success', money=self.balance))
         return protos.bank_system_pb2.Event(id=self.id, interface='query', money=self.balance)
 
+    # This grpc end point is for getting the output txt line for current branch
     def getOutput(self, request, context):
         return protos.bank_system_pb2.Output(id=self.id, recv=self.recvMsg)
 

@@ -1,6 +1,9 @@
 import grpc
 import json
 import sys
+
+from google.protobuf import json_format
+
 import protos.bank_system_pb2
 import protos.bank_system_pb2_grpc
 import time
@@ -48,11 +51,20 @@ if __name__ == '__main__':
             stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
             print(stub.getFinalBalance(protos.bank_system_pb2.Event(id=cus_id, interface='query')))
 
+        output = ''
         # Get results from the branch services
         for cus_id in customer_requests.keys():
             # get final balance
             port = PORT + cus_id
             channel = grpc.insecure_channel(f'localhost:{port}')
             stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
-            print(stub.getOutput(protos.bank_system_pb2.Output()))
+            output = output + json.dumps(
+                json_format.MessageToJson(stub.getOutput(protos.bank_system_pb2.Output()))) \
+                .replace('\\n', '') \
+                .replace('\\"', '\'') \
+                .replace('"', '') \
+                .replace(' ', '') + '\n'
+
+        with open(f'output/output.txt', 'w') as the_file:
+            the_file.write(output + '\n')
         print('end of client')
