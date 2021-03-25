@@ -33,6 +33,7 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
             print(f'branch {self.id} {interface} {money}, result in {self.balance}')
             if interface != 'query':
                 self.recvMsg.append(protos.bank_system_pb2.Recv(interface=interface, result='success'))
+        # once the events done executing, send the events to other follow branches for syncing purpose
         for i in range(1, num_branch + 1):
             if i != int(self.id):
                 port = PORT + i
@@ -42,7 +43,9 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
                     protos.bank_system_pb2.Events(events=request.events, number_of_fellow=num_branch))
         return request
 
-    # This function receives request from customer and branch processes and return results from the requested process
+    # This function receives request from branch processes and sync the current Branch by performing
+    # events from incoming branch id
+    # i.e. branch 1 send SyncBranch request to branch 2, branch 2 will execute all events in branch 1
     def SyncBranch(self, request, context):
         for event in request.events:
             interface = event.interface
