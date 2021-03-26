@@ -23,9 +23,9 @@ message Recv {
 }
 
 service BranchService {
-    rpc MsgDelivery(Events) returns (Events) {}
-    rpc Propogate_Deposit(Events) returns (Recv) {}
-    rpc Propogate_Withdraw(Events) returns (Recv) {}
+    rpc MsgDelivery(Events) returns (Output) {}
+    rpc Propogate_Deposit(Event) returns (Recv) {}
+    rpc Propogate_Withdraw(Event) returns (Recv) {}
     rpc getFinalBalance(Event) returns (Event) {}
     rpc getOutput(Output) returns (Output) {}
 }

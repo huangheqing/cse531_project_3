@@ -39,9 +39,10 @@ if __name__ == '__main__':
             # We passed the number of fellow branches to the Customer class so the branches can update the
             # fellow server accordingly
             client_request(cus_id, customer_requests[cus_id], len(customer_requests))
+            time.sleep(1)
 
         # This is just for sake of simplicity to make sure all processes are finished
-        time.sleep(3)
+        time.sleep(2)
 
         # Get results from the branch services
         for cus_id in customer_requests.keys():
