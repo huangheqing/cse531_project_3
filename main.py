@@ -66,6 +66,6 @@ if __name__ == '__main__':
                 .replace('"', '') \
                 .replace(' ', '') + '\n'
         print(output)
-        with open(f'output/output.txt', 'w') as the_file:
+        with open(f'output/output_input_test_3.txt', 'w') as the_file:
             the_file.write(output + '\n')
         print('end of client')

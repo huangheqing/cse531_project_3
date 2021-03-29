@@ -34,7 +34,7 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
             recvs.append(protos.bank_system_pb2.Recv(result=result))
             print(f'branch {self.id} {interface} {money}, result in {self.balance}')
             if interface != 'query':
-                self.recvMsg.append(protos.bank_system_pb2.Recv(interface=interface, result='success'))
+                self.recvMsg.append(protos.bank_system_pb2.Recv(interface=interface, result=result))
         return protos.bank_system_pb2.Output(id=self.id, recv=recvs)
 
     # This function receives request from branch processes and sync the current Branch by performing
