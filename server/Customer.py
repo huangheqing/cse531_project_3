@@ -25,5 +25,6 @@ class Customer():
 
     # process events from the list and submit the requests to branch process
     def executeEvents(self):
+        # All customer start events with clock 1
         self.stub.MsgDelivery(
-            protos.bank_system_pb2.Events(events=self.events, number_of_fellow=self.num_of_fellow))
+            protos.bank_system_pb2.Events(events=self.events, number_of_fellow=self.num_of_fellow, clock=1))

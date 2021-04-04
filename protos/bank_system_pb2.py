@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x18protos/bank_system.proto\":\n\x06\x45vents\x12\x16\n\x06\x65vents\x18\x01 \x03(\x0b\x32\x06.Event\x12\x18\n\x10number_of_fellow\x18\x02 \x01(\x05\"5\n\x05\x45vent\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\r\n\x05money\x18\x03 \x01(\x05\")\n\x06Output\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x13\n\x04recv\x18\x02 \x03(\x0b\x32\x05.Recv\"8\n\x04Recv\x12\x11\n\tinterface\x18\x01 \x01(\t\x12\x0e\n\x06result\x18\x02 \x01(\t\x12\r\n\x05money\x18\x03 \x01(\x05\x32\xc5\x01\n\rBranchService\x12!\n\x0bMsgDelivery\x12\x07.Events\x1a\x07.Output\"\x00\x12$\n\x11Propogate_Deposit\x12\x06.Event\x1a\x05.Recv\"\x00\x12%\n\x12Propogate_Withdraw\x12\x06.Event\x1a\x05.Recv\"\x00\x12#\n\x0fgetFinalBalance\x12\x06.Event\x1a\x06.Event\"\x00\x12\x1f\n\tgetOutput\x12\x07.Output\x1a\x07.Output\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x18protos/bank_system.proto\"I\n\x06\x45vents\x12\x16\n\x06\x65vents\x18\x01 \x03(\x0b\x32\x06.Event\x12\x18\n\x10number_of_fellow\x18\x02 \x01(\x05\x12\r\n\x05\x63lock\x18\x03 \x01(\x05\"D\n\x05\x45vent\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\r\n\x05money\x18\x03 \x01(\x05\x12\r\n\x05\x63lock\x18\x04 \x01(\x05\")\n\x06Output\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x13\n\x04recv\x18\x02 \x03(\x0b\x32\x05.Recv\"G\n\x04Recv\x12\x11\n\tinterface\x18\x01 \x01(\t\x12\x0e\n\x06result\x18\x02 \x01(\t\x12\r\n\x05money\x18\x03 \x01(\x05\x12\r\n\x05\x63lock\x18\x04 \x01(\x05\"9\n\rBranchProcess\x12\x0b\n\x03pid\x18\x01 \x01(\x05\x12\x1b\n\x04\x64\x61ta\x18\x02 \x03(\x0b\x32\r.ClockProcess\"7\n\x0c\x43lockProcess\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05\x63lock\x18\x03 \x01(\x05\x32\xfb\x01\n\rBranchService\x12!\n\x0bMsgDelivery\x12\x07.Events\x1a\x07.Output\"\x00\x12$\n\x11Propogate_Deposit\x12\x06.Event\x1a\x05.Recv\"\x00\x12%\n\x12Propogate_Withdraw\x12\x06.Event\x1a\x05.Recv\"\x00\x12#\n\x0fgetFinalBalance\x12\x06.Event\x1a\x06.Event\"\x00\x12\x1f\n\tgetOutput\x12\x07.Output\x1a\x07.Output\"\x00\x12\x34\n\x10getBranchProcess\x12\x0e.BranchProcess\x1a\x0e.BranchProcess\"\x00\x62\x06proto3'
 )
 
 
@@ -47,6 +47,13 @@ _EVENTS = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='clock', full_name='Events.clock', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -60,7 +67,7 @@ _EVENTS = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=28,
-  serialized_end=86,
+  serialized_end=101,
 )
 
 
@@ -93,6 +100,13 @@ _EVENT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='clock', full_name='Event.clock', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -105,8 +119,8 @@ _EVENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=88,
-  serialized_end=141,
+  serialized_start=103,
+  serialized_end=171,
 )
 
 
@@ -144,8 +158,8 @@ _OUTPUT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=143,
-  serialized_end=184,
+  serialized_start=173,
+  serialized_end=214,
 )
 
 
@@ -178,6 +192,13 @@ _RECV = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='clock', full_name='Recv.clock', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -190,16 +211,104 @@ _RECV = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=186,
-  serialized_end=242,
+  serialized_start=216,
+  serialized_end=287,
+)
+
+
+_BRANCHPROCESS = _descriptor.Descriptor(
+  name='BranchProcess',
+  full_name='BranchProcess',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='pid', full_name='BranchProcess.pid', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='data', full_name='BranchProcess.data', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=289,
+  serialized_end=346,
+)
+
+
+_CLOCKPROCESS = _descriptor.Descriptor(
+  name='ClockProcess',
+  full_name='ClockProcess',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='id', full_name='ClockProcess.id', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='name', full_name='ClockProcess.name', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='clock', full_name='ClockProcess.clock', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=348,
+  serialized_end=403,
 )
 
 _EVENTS.fields_by_name['events'].message_type = _EVENT
 _OUTPUT.fields_by_name['recv'].message_type = _RECV
+_BRANCHPROCESS.fields_by_name['data'].message_type = _CLOCKPROCESS
 DESCRIPTOR.message_types_by_name['Events'] = _EVENTS
 DESCRIPTOR.message_types_by_name['Event'] = _EVENT
 DESCRIPTOR.message_types_by_name['Output'] = _OUTPUT
 DESCRIPTOR.message_types_by_name['Recv'] = _RECV
+DESCRIPTOR.message_types_by_name['BranchProcess'] = _BRANCHPROCESS
+DESCRIPTOR.message_types_by_name['ClockProcess'] = _CLOCKPROCESS
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Events = _reflection.GeneratedProtocolMessageType('Events', (_message.Message,), {
@@ -230,6 +339,20 @@ Recv = _reflection.GeneratedProtocolMessageType('Recv', (_message.Message,), {
   })
 _sym_db.RegisterMessage(Recv)
 
+BranchProcess = _reflection.GeneratedProtocolMessageType('BranchProcess', (_message.Message,), {
+  'DESCRIPTOR' : _BRANCHPROCESS,
+  '__module__' : 'protos.bank_system_pb2'
+  # @@protoc_insertion_point(class_scope:BranchProcess)
+  })
+_sym_db.RegisterMessage(BranchProcess)
+
+ClockProcess = _reflection.GeneratedProtocolMessageType('ClockProcess', (_message.Message,), {
+  'DESCRIPTOR' : _CLOCKPROCESS,
+  '__module__' : 'protos.bank_system_pb2'
+  # @@protoc_insertion_point(class_scope:ClockProcess)
+  })
+_sym_db.RegisterMessage(ClockProcess)
+
 
 
 _BRANCHSERVICE = _descriptor.ServiceDescriptor(
@@ -239,8 +362,8 @@ _BRANCHSERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=245,
-  serialized_end=442,
+  serialized_start=406,
+  serialized_end=657,
   methods=[
   _descriptor.MethodDescriptor(
     name='MsgDelivery',
@@ -289,6 +412,16 @@ _BRANCHSERVICE = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_OUTPUT,
     output_type=_OUTPUT,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='getBranchProcess',
+    full_name='BranchService.getBranchProcess',
+    index=5,
+    containing_service=None,
+    input_type=_BRANCHPROCESS,
+    output_type=_BRANCHPROCESS,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

@@ -1,6 +1,7 @@
 import grpc
 import json
 import sys
+import collections
 
 from google.protobuf import json_format
 
@@ -39,7 +40,7 @@ if __name__ == '__main__':
             # We passed the number of fellow branches to the Customer class so the branches can update the
             # fellow server accordingly
             client_request(cus_id, customer_requests[cus_id], len(customer_requests))
-            time.sleep(1)
+            time.sleep(0.5)
 
         # This is just for sake of simplicity to make sure all processes are finished
         time.sleep(2)
@@ -54,18 +55,34 @@ if __name__ == '__main__':
 
         output = ''
         # Get results from the branch services
+        events = {}
         for cus_id in customer_requests.keys():
             # get final balance
             port = PORT + cus_id
             channel = grpc.insecure_channel(f'localhost:{port}')
             stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
-            output = output + json.dumps(
-                json_format.MessageToJson(stub.getOutput(protos.bank_system_pb2.Output()))) \
+            process_out = stub.getBranchProcess(protos.bank_system_pb2.BranchProcess(pid=cus_id))
+            for item in process_out.data:
+                eventId = item.id
+                name = item.name
+                clock = item.clock
+                if eventId not in events:
+                    events[eventId] = [item]
+                else:
+                    events[eventId].append(item)
+            json_str = json.dumps(json_format.MessageToJson(process_out))
+            output = output + json_str \
                 .replace('\\n', '') \
                 .replace('\\"', '\'') \
                 .replace('"', '') \
                 .replace(' ', '') + '\n'
         print(output)
+        for id in events.keys():
+            print(f'eventid:{id}')
+            sorted_events = sorted(events[id], key=lambda item: item.clock)
+            events[id] = sorted_events
+            for item in sorted_events:
+                print(f'{item.clock} : {item.name}')
         with open(f'output/output_input_test_3.txt', 'w') as the_file:
             the_file.write(output + '\n')
         print('end of client')
