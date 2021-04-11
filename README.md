@@ -1,6 +1,6 @@
-# cse531_project_1
-Distributed Banking System
-This system has several components that simulate the view, deposit and withdraw operations in 
+# cse531_project_2
+# Logical Clock on Distributed Banking System
+This system has several components that simulate the Lamport’s logical clock algorithm on top of deposit and withdraw operations in 
 a real-world banking system.
  
 ## Setup and installation
