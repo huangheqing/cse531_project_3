@@ -1,7 +1,6 @@
 import grpc
 import json
 import sys
-import collections
 
 from google.protobuf import json_format
 
@@ -53,9 +52,9 @@ if __name__ == '__main__':
             stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
             print(stub.getFinalBalance(protos.bank_system_pb2.Event(id=cus_id, interface='query')))
 
-        output = ''
         # Get results from the branch services
         events = {}
+        outputList = []
         for cus_id in customer_requests.keys():
             # get final balance
             port = PORT + cus_id
@@ -71,18 +70,26 @@ if __name__ == '__main__':
                 else:
                     events[eventId].append(item)
             json_str = json.dumps(json_format.MessageToJson(process_out))
-            output = output + json_str \
-                .replace('\\n', '') \
-                .replace('\\"', '\'') \
-                .replace('"', '') \
-                .replace(' ', '') + '\n'
-        print(output)
+            replaced_json = json_str.replace('\\n', '').replace('\\"', '"').replace(' ', '')
+            replaced_json = replaced_json[1:-1]
+            outputList.append(replaced_json)
+            print(replaced_json)
         for id in events.keys():
-            print(f'eventid:{id}')
             sorted_events = sorted(events[id], key=lambda item: item.clock)
             events[id] = sorted_events
+            event_list = []
             for item in sorted_events:
-                print(f'{item.clock} : {item.name}')
-        with open(f'output/output_input_test_3.txt', 'w') as the_file:
-            the_file.write(output + '\n')
+                event_list.append(
+                    '{"clock": {item.clock}, "name": "{item.name}"}'.replace('{item.clock}', str(item.clock)).replace(
+                        '{item.name}', item.name))
+            json_str = '{"eventId":{id}, "data":[{",".join(event_list)}]}'.replace('{id}', str(id)).replace(
+                '{",".join(event_list)}', ",".join(event_list))
+            outputList.append(json_str)
+        outputJson = f'[{",".join(outputList)}]'
+        print(outputJson)
+        json_object = json.loads(outputJson)
+        json_formatted_str = json.dumps(json_object, indent=2)
+        print(json_formatted_str)
+        with open(f'output/output.txt', 'w') as the_file:
+            the_file.write(json_formatted_str + '\n')
         print('end of client')
