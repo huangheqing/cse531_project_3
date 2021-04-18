@@ -21,12 +21,11 @@ if __name__ == '__main__':
             print(f'not able to load the json file: {filename}')
 
         initial_balance = input_data[0]['events'][0]['money']
-        print(f'initial balance is {initial_balance}')
         customer_requests = {}
         processes = []
         if len(input_data) > 1:
             for data in input_data:
-                if data['type'] == 'customer':
+                if data['type'] == 'client':
                     i = data['id']
                     events = data['events']
                     # We grab all customers process and based on the customer id
@@ -34,12 +33,13 @@ if __name__ == '__main__':
                     run_backend(i, initial_balance, processes)
                     customer_requests[i] = events
 
+        time.sleep(2)
         for cus_id in customer_requests.keys():
             # make request from the client to backend
             # We passed the number of fellow branches to the Customer class so the branches can update the
             # fellow server accordingly
             client_request(cus_id, customer_requests[cus_id], len(customer_requests))
-            time.sleep(0.5)
+            # time.sleep(0.5)
 
         # This is just for sake of simplicity to make sure all processes are finished
         time.sleep(2)

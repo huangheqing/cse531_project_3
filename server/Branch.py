@@ -9,6 +9,18 @@ from utils.SubEventsInterfaces import Event_Request, Event_Execute, Propagate_Re
 
 SUCCESS = 'success'
 FAILURE = 'failure'
+DEPOSIT_REQUEST = 'deposit_request'
+DEPOSIT_EXECUTE = 'deposit_execute'
+DEPOSIT_RESPONSE = 'deposit_response'
+DEPOSIT_B_REQUEST = 'deposit_broadcast_request'
+DEPOSIT_B_EXECUTE = 'deposit_broadcast_execute'
+DEPOSIT_B_RESPONSE = 'deposit_broadcast_response'
+WITHDRAW_REQUEST = 'withdraw_request'
+WITHDRAW_EXECUTE = 'withdraw_execute'
+WITHDRAW_RESPONSE = 'withdraw_response'
+WITHDRAW_B_REQUEST = 'withdraw_broadcast_request'
+WITHDRAW_B_EXECUTE = 'withdraw_broadcast_execute'
+WITHDRAW_B_RESPONSE = 'withdraw_broadcast_response'
 
 
 class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
@@ -28,7 +40,7 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
         self.eventId = list()
         # local clock start with initial value 1
         self.clock = 1
-        self.branchProcess = list()
+        self.branchProcesses = list()
         pass
 
     # This function receives request from customer and branch processes and return results from the requested process
@@ -42,13 +54,13 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
             if interface == DEPOSIT or interface == WITHDRAW:
                 # 1. no matter what happens, when this endpoint receives message, increment the max(local, remote)
                 self.clock = selectedClockIncrement(self.clock, remote_clock)
-                self.branchProcess.append(Event_Request(self.clock,
-                                                        'deposit_request' if interface == DEPOSIT else 'withdraw_request',
-                                                        event.id))
+                self.branchProcesses.append(Event_Request(self.clock,
+                                                          DEPOSIT_REQUEST if interface == DEPOSIT else WITHDRAW_REQUEST,
+                                                          event.id))
                 # 2. going to execute event in current Branch process, increment local clock
                 self.clock = clockIncrement(self.clock)
-                self.branchProcess.append(
-                    Event_Execute(self.clock, 'deposit_execute' if interface == DEPOSIT else 'withdraw_execute',
+                self.branchProcesses.append(
+                    Event_Execute(self.clock, DEPOSIT_EXECUTE if interface == DEPOSIT else WITHDRAW_EXECUTE,
                                   event.id))
             result = self.operate_money(interface, money, num_branch, event.id)
             recvs.append(protos.bank_system_pb2.Recv(result=result))
@@ -56,9 +68,11 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
             if interface != QUERY:
                 self.recvMsg.append(protos.bank_system_pb2.Recv(interface=interface, result=result))
                 self.clock = clockIncrement(self.clock)
-                self.branchProcess.append(protos.bank_system_pb2.ClockProcess(id=event.id,
-                                                                              name='deposit_response' if interface == DEPOSIT else 'withdraw_response',
-                                                                              clock=self.clock))
+                self.branchProcesses.append(protos.bank_system_pb2.ClockProcess(id=event.id,
+                                                                                name=DEPOSIT_RESPONSE
+                                                                                if interface == DEPOSIT
+                                                                                else WITHDRAW_RESPONSE,
+                                                                                clock=self.clock))
         return protos.bank_system_pb2.Output(id=self.id, recv=recvs)
 
     # This function receives request from branch processes and sync the current Branch by performing
@@ -71,10 +85,10 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
         remote_clock = request.clock
         # Propogate Receive, selected increment
         self.clock = selectedClockIncrement(self.clock, remote_clock)
-        self.branchProcess.append(Propagate_Request(self.clock, 'deposit_broadcast_request', request.id))
+        self.branchProcesses.append(Propagate_Request(self.clock, DEPOSIT_B_REQUEST, request.id))
         # Propogate Execute, local increment
         self.clock = clockIncrement(self.clock)
-        self.branchProcess.append(Propogate_Execute(self.clock, 'deposit_broadcast_execute', request.id))
+        self.branchProcesses.append(Propogate_Execute(self.clock, DEPOSIT_B_EXECUTE, request.id))
         result = self.operate_money(interface, money, 0, 0)
         print(f'syncing branch {self.id} {interface} {money}, result in {self.balance}')
         return protos.bank_system_pb2.Recv(result=result, clock=self.clock)
@@ -85,10 +99,10 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
         remote_clock = request.clock
         # Propogate Receive, selected increment
         self.clock = selectedClockIncrement(self.clock, remote_clock)
-        self.branchProcess.append(Propagate_Request(self.clock, 'withdraw_broadcast_request', request.id))
+        self.branchProcesses.append(Propagate_Request(self.clock, WITHDRAW_B_REQUEST, request.id))
         # Propogate Execute, local increment
         self.clock = clockIncrement(self.clock)
-        self.branchProcess.append(Propogate_Execute(self.clock, 'withdraw_broadcast_execute', request.id))
+        self.branchProcesses.append(Propogate_Execute(self.clock, WITHDRAW_B_EXECUTE, request.id))
         result = self.operate_money(interface, money, 0, 0)
         print(f'syncing branch {self.id} {interface} {money}, result in {self.balance}')
         return protos.bank_system_pb2.Recv(result=result, clock=self.clock)
@@ -103,7 +117,7 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
         return protos.bank_system_pb2.Output(id=self.id, recv=self.recvMsg)
 
     def getBranchProcess(self, request, context):
-        return protos.bank_system_pb2.BranchProcess(pid=self.id, data=self.branchProcess)
+        return protos.bank_system_pb2.BranchProcess(pid=self.id, data=self.branchProcesses)
 
     # return the current balance
     def Query(self):
@@ -119,18 +133,18 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
             return FAILURE
         else:
             self.balance = tmp_balance
+            # this is propogate send
+            self.clock = clockIncrement(self.clock)
             for i in range(1, num_branch + 1):
                 if i != int(self.id):
                     p = PORT + i
                     channel = grpc.insecure_channel(f'localhost:{p}')
                     stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
-                    # this is propogate send
-                    self.clock = clockIncrement(self.clock)
                     # prpogate response
                     prop_response = stub.Propogate_Withdraw(
                         protos.bank_system_pb2.Event(id=event_id, interface=interface, money=money, clock=self.clock))
                     self.clock = selectedClockIncrement(self.clock, prop_response.clock)
-                    self.branchProcess.append(Propogate_Response(self.clock, 'withdraw_broadcast_response', event_id))
+                    self.branchProcesses.append(Propogate_Response(self.clock, WITHDRAW_B_RESPONSE, event_id))
             return SUCCESS
 
     # perform Deposit from current branch
@@ -143,18 +157,18 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
             return FAILURE
         else:
             self.balance = tmp_balance
+            # this is propogate send
+            self.clock = clockIncrement(self.clock)
             for i in range(1, num_branch + 1):
                 if i != int(self.id):
                     p = PORT + i
                     channel = grpc.insecure_channel(f'localhost:{p}')
                     stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
-                    # this is propogate send
-                    self.clock = clockIncrement(self.clock)
                     # prpogate response
                     prop_response = stub.Propogate_Deposit(
                         protos.bank_system_pb2.Event(id=event_id, interface=interface, money=money, clock=self.clock))
                     self.clock = selectedClockIncrement(self.clock, prop_response.clock)
-                    self.branchProcess.append(Propogate_Response(self.clock, 'deposit_broadcast_response', event_id))
+                    self.branchProcesses.append(Propogate_Response(self.clock, DEPOSIT_B_RESPONSE, event_id))
             return SUCCESS
 
     # a switch function on interface

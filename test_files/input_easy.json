@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "type": "customer",
+    "type": "client",
     "events": [
       {
         "id": 1,
@@ -12,7 +12,7 @@
   },
   {
     "id": 2,
-    "type": "customer",
+    "type": "client",
     "events": [
       {
         "id": 2,
@@ -28,7 +28,7 @@
   },
   {
     "id": 3,
-    "type": "customer",
+    "type": "client",
     "events": [
       {
         "id": 4,
@@ -44,17 +44,17 @@
   },
   {
     "id": 1,
-    "type": "branch",
+    "type": "bank",
     "balance": 400
   },
   {
     "id": 2,
-    "type": "branch",
+    "type": "bank",
     "balance": 400
   },
   {
     "id": 3,
-    "type": "branch",
+    "type": "bank",
     "balance": 400
   }
 ]
