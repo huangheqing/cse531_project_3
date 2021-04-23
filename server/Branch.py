@@ -4,8 +4,6 @@ import protos.bank_system_pb2_grpc
 
 from utils.Operations import QUERY, DEPOSIT, WITHDRAW
 from utils.constant import PORT
-from utils.SubEventsInterfaces import Event_Request, Event_Execute, Propagate_Request, Propogate_Execute, \
-    Propogate_Response, selectedClockIncrement, clockIncrement
 
 SUCCESS = 'success'
 FAILURE = 'failure'
@@ -46,24 +44,11 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
     # This function receives request from customer and branch processes and return results from the requested process
     def MsgDelivery(self, request, context):
         num_branch = request.number_of_fellow
-        remote_clock = request.clock
         recvs = []
         for event in request.events:
             interface = event.interface
             money = event.money
-            if interface == DEPOSIT or interface == WITHDRAW:
-                # 1. no matter what happens, when this endpoint receives message, increment the max(local, remote)
-                self.clock = selectedClockIncrement(self.clock, remote_clock)
-                self.branchProcesses.append(Event_Request(self.clock,
-                                                          DEPOSIT_REQUEST if interface == DEPOSIT else WITHDRAW_REQUEST,
-                                                          event.id))
-                # 2. going to execute event in current Branch process, increment local clock
-                self.clock = clockIncrement(self.clock)
-                self.branchProcesses.append(
-                    Event_Execute(self.clock, DEPOSIT_EXECUTE if interface == DEPOSIT else WITHDRAW_EXECUTE,
-                                  event.id))
             result = self.operate_money(interface, money, num_branch, event.id)
-            recvs.append(protos.bank_system_pb2.Recv(result=result))
             print(f'branch {self.id} {interface} {money}, result in {self.balance}')
             if interface != QUERY:
                 self.recvMsg.append(protos.bank_system_pb2.Recv(interface=interface, result=result))
@@ -82,12 +67,6 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
     def Propogate_Deposit(self, request, context):
         interface = request.interface
         money = request.money
-        remote_clock = request.clock
-        # Propogate Receive, selected increment
-        self.clock = selectedClockIncrement(self.clock, remote_clock)
-        self.branchProcesses.append(Propagate_Request(self.clock, DEPOSIT_B_REQUEST, request.id))
-        # Propogate Execute, local increment
-        self.clock = clockIncrement(self.clock)
         self.branchProcesses.append(Propogate_Execute(self.clock, DEPOSIT_B_EXECUTE, request.id))
         result = self.operate_money(interface, money, 0, 0)
         print(f'syncing branch {self.id} {interface} {money}, result in {self.balance}')
@@ -96,12 +75,6 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
     def Propogate_Withdraw(self, request, context):
         interface = request.interface
         money = request.money
-        remote_clock = request.clock
-        # Propogate Receive, selected increment
-        self.clock = selectedClockIncrement(self.clock, remote_clock)
-        self.branchProcesses.append(Propagate_Request(self.clock, WITHDRAW_B_REQUEST, request.id))
-        # Propogate Execute, local increment
-        self.clock = clockIncrement(self.clock)
         self.branchProcesses.append(Propogate_Execute(self.clock, WITHDRAW_B_EXECUTE, request.id))
         result = self.operate_money(interface, money, 0, 0)
         print(f'syncing branch {self.id} {interface} {money}, result in {self.balance}')
@@ -111,13 +84,6 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
     def getFinalBalance(self, request, context):
         self.recvMsg.append(protos.bank_system_pb2.Recv(interface=QUERY, result=SUCCESS, money=self.balance))
         return protos.bank_system_pb2.Event(id=self.id, interface=QUERY, money=self.balance)
-
-    # This grpc end point is for getting the output txt line for current branch
-    def getOutput(self, request, context):
-        return protos.bank_system_pb2.Output(id=self.id, recv=self.recvMsg)
-
-    def getBranchProcess(self, request, context):
-        return protos.bank_system_pb2.BranchProcess(pid=self.id, data=self.branchProcesses)
 
     # return the current balance
     def Query(self):
@@ -133,8 +99,6 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
             return FAILURE
         else:
             self.balance = tmp_balance
-            # this is propogate send
-            self.clock = clockIncrement(self.clock)
             for i in range(1, num_branch + 1):
                 if i != int(self.id):
                     p = PORT + i
@@ -157,8 +121,6 @@ class Branch(protos.bank_system_pb2_grpc.BranchServiceServicer):
             return FAILURE
         else:
             self.balance = tmp_balance
-            # this is propogate send
-            self.clock = clockIncrement(self.clock)
             for i in range(1, num_branch + 1):
                 if i != int(self.id):
                     p = PORT + i

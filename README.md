@@ -1,7 +1,12 @@
-# cse531_project_2
-# Logical Clock on Distributed Banking System
-This system has several components that simulate the Lamport’s logical clock algorithm on top of deposit and withdraw operations in 
-a real-world banking system.
+# cse531_project_3
+# Client Centric Consistency on Distributed Banking System
+Implement client centric consistency on our distributed banking system
+
+This system is going to support:
+* Monotonic write - Monotonic writes ensures that if a process performs write w1, then w2, then all processes observe w1 before w2.
+Monotonic writes does not apply to operations performed by different processes, only writes by the same process.
+* Read your write - requires that if a process performs a write w, then that same process performs a subsequent read r, then r must observe w’s effects.
+
  
 ## Setup and installation
 For running this system on your computer, please make sure following the steps to install required components:

@@ -2,15 +2,13 @@ syntax = "proto3";
 
 message Events {
     repeated Event events = 1;
-    int32 number_of_fellow = 2;
-    int32 clock = 3;
+    repeated int32 number_of_fellow = 2;
 }
 
 message Event {
   int32 id = 1;
   string interface = 2;
   int32 money = 3;
-  int32 clock = 4;
 }
 
 message Output {
@@ -22,18 +20,6 @@ message Recv {
   string interface = 1;
   string result = 2;
   int32 money = 3;
-  int32 clock = 4;
-}
-
-message BranchProcess {
-  int32 pid = 1;
-  repeated ClockProcess data = 2;
-}
-
-message ClockProcess {
-  int32 id = 1;
-  string name = 2;
-  int32 clock = 3;
 }
 
 
@@ -42,6 +28,4 @@ service BranchService {
     rpc Propogate_Deposit(Event) returns (Recv) {}
     rpc Propogate_Withdraw(Event) returns (Recv) {}
     rpc getFinalBalance(Event) returns (Event) {}
-    rpc getOutput(Output) returns (Output) {}
-    rpc getBranchProcess(BranchProcess) returns (BranchProcess) {}
 }

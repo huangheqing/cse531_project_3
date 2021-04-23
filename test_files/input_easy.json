@@ -1,60 +1,32 @@
 [
   {
     "id": 1,
-    "type": "client",
+    "type": "customer",
     "events": [
       {
-        "id": 1,
-        "interface": "query",
-        "money": 400
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "type": "client",
-    "events": [
-      {
-        "id": 2,
         "interface": "deposit",
-        "money": 170
+        "money": 400,
+        "dest": 1
       },
       {
-        "id": 3,
-        "interface": "query",
-        "money": 400
-      }
-    ]
-  },
-  {
-    "id": 3,
-    "type": "client",
-    "events": [
-      {
-        "id": 4,
         "interface": "withdraw",
-        "money": 70
+        "money": 400,
+        "dest": 2
       },
       {
-        "id": 5,
         "interface": "query",
-        "money": 400
+        "dest": 2
       }
     ]
   },
   {
     "id": 1,
     "type": "bank",
-    "balance": 400
+    "balance": 0
   },
   {
     "id": 2,
     "type": "bank",
-    "balance": 400
-  },
-  {
-    "id": 3,
-    "type": "bank",
-    "balance": 400
+    "balance": 0
   }
 ]

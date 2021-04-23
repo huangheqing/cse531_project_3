@@ -20,60 +20,54 @@ if __name__ == '__main__':
         except "Not able to process file":
             print(f'not able to load the json file: {filename}')
 
-        initial_balance = input_data[0]['events'][0]['money']
-        customer_requests = {}
+        initial_balance = 0
+        for data_item in input_data:
+            if data_item['type'] == 'bank':
+                initial_balance = data_item['balance']
         processes = []
+        dests = {}
+        events = []
+        final_output_branch = 1
         if len(input_data) > 1:
             for data in input_data:
-                if data['type'] == 'client':
-                    i = data['id']
+                if data['type'] == 'customer':
                     events = data['events']
                     # We grab all customers process and based on the customer id
                     # create branch services
-                    run_backend(i, initial_balance, processes)
-                    customer_requests[i] = events
+                    for event in events:
+                        dests.add(event['dest'])
+                        if event['interface'] == 'query':
+                            final_output_branch = event['dest']
+                    for dest in dests:
+                        run_backend(dest, initial_balance, processes)
+                        events = events
 
+        # Single customer process:
         time.sleep(2)
-        for cus_id in customer_requests.keys():
-            # make request from the client to backend
-            # We passed the number of fellow branches to the Customer class so the branches can update the
-            # fellow server accordingly
-            client_request(cus_id, customer_requests[cus_id], len(customer_requests))
-            # time.sleep(0.5)
-
-        # This is just for sake of simplicity to make sure all processes are finished
-        time.sleep(2)
-
-        # Get results from the branch services
-        for cus_id in customer_requests.keys():
-            # get final balance
-            port = PORT + cus_id
-            channel = grpc.insecure_channel(f'localhost:{port}')
-            stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
-            print(stub.getFinalBalance(protos.bank_system_pb2.Event(id=cus_id, interface='query')))
+        client_request(0, events, len(dests))
 
         # Get results from the branch services
         events = {}
         outputList = []
-        for cus_id in customer_requests.keys():
-            # get final balance
-            port = PORT + cus_id
-            channel = grpc.insecure_channel(f'localhost:{port}')
-            stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
-            process_out = stub.getBranchProcess(protos.bank_system_pb2.BranchProcess(pid=cus_id))
-            for item in process_out.data:
-                eventId = item.id
-                name = item.name
-                clock = item.clock
-                if eventId not in events:
-                    events[eventId] = [item]
-                else:
-                    events[eventId].append(item)
-            json_str = json.dumps(json_format.MessageToJson(process_out))
-            replaced_json = json_str.replace('\\n', '').replace('\\"', '"').replace(' ', '')
-            replaced_json = replaced_json[1:-1]
-            outputList.append(replaced_json)
-            print(replaced_json)
+
+        # get final balance
+        port = PORT + final_output_branch
+        channel = grpc.insecure_channel(f'localhost:{port}')
+        stub = protos.bank_system_pb2_grpc.BranchServiceStub(channel)
+        process_out = stub.getFinalBalance(protos.bank_system_pb2.BranchProcess(pid=cus_id))
+        for item in process_out.data:
+            eventId = item.id
+            name = item.name
+            clock = item.clock
+            if eventId not in events:
+                events[eventId] = [item]
+            else:
+                events[eventId].append(item)
+        json_str = json.dumps(json_format.MessageToJson(process_out))
+        replaced_json = json_str.replace('\\n', '').replace('\\"', '"').replace(' ', '')
+        replaced_json = replaced_json[1:-1]
+        outputList.append(replaced_json)
+        print(replaced_json)
         for id in events.keys():
             sorted_events = sorted(events[id], key=lambda item: item.clock)
             events[id] = sorted_events

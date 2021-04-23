@@ -13,5 +13,4 @@ def run_backend(customer_id, initial_value, processes):
 def client_request(id, events, branch_num):
     customer = Customer(id, events, branch_num)
     print(f'requesting branch {id}')
-    customer.createStub()
     customer.executeEvents()
